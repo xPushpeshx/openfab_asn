@@ -2,49 +2,30 @@
 Welcome! You’ve stepped into the arena – now show us what you’ve got! 
 
 ## Mission
-You're not just fiddling with code here; you're architecting the future. Your battleground? An AI app framework crying out for a brain.
+main.py file updated.
 
-Your task: Forge an 💬NLP chatbot that doesn’t just answer, but masters science-related questions.
+```bash
+docker build . -t test
+docker run -p5500:5500 test
+```
 
-Immerse yourself in the main.py file. Your battlefield is the execute function. Time to unleash your genius:
+## Explanation and code updated
+I have used hugging face model for our science based QnA.
 ```python
-############################################################
-# Callback function called on each execution pass
-############################################################
 def execute(request: SimpleText, ray: Ray, state: State) -> SimpleText:
     output = []
     for text in request.text:
-        # TODO Add code here
-        response = 'Hello!' <<-- Here you add the magic 
-        output.append(response)
+        # Ensure the NLP pipeline is initialized before processing the request
+        if tokenizer and model is None:
+            output.append("Error: Model and Tokenizer not initialized.")
+        else:
+            # Utilize the pre-trained model to find the answer to the science-related question
+            input_text = text
+            input_ids = tokenizer(input_text, return_tensors="pt").input_ids
+
+            outputs = model.generate(input_ids)
+
+            output.append(tokenizer.decode(outputs[0]))
 
     return SchemaUtil.create(SimpleText(), dict(text=output))
 ```
-## Ground Rules
-Step up with any arsenal (read: libraries or packages) you believe in, but remember:
-* 👎 External services like chatGPT are off-limits. Stand on your own.
-* 👎 Plagiarism is for the weak. Forge your own path.
-* 👎 A broken app equals failure. Non-negotiable.
-
-## Deployment Options
-The application can be executed in two different ways:
-* locally by running the `start.sh` 
-* on in a docker container using `Dockerfile` 
-
-## Proving Your Mettle
-* Submit your masterpiece on GitHub. We want the link within **1 week, not a second more**.
-* Go the extra mile and include a video where you walk us through your solution, showcasing 
-it in live action. 
-* We want to see not just what you've created but also how you envisioned and executed it
-
-
-## This Is It
-We're not just evaluating a project; we're judging your potential to revolutionize our 
-landscape. A half-baked app won’t cut it.
-
-We're zeroing in on:
-* 👍 Exceptional documentation.
-* 👍 Code that speaks volumes.
-* 👍 Inventiveness that dazzles.
-* 👍 A problem-solving beast.
-* 👍 Unwavering adherence to the brief
